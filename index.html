@@ -6,14 +6,25 @@
     <title>Nekonečná Poznávačka</title>
     <style>
         :root { --primary: #4a90e2; --success: #2ecc71; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: #f0f2f5; 
+            display: flex; 
+            justify-content: center; 
+            
+            /* ZMĚNY ZDE: */
+            align-items: flex-start; /* Zarovná kartu k hornímu okraji místo na střed */
+            min-height: auto;        /* Zruší vynucenou výšku 100vh */
+            padding-top: 10px;       /* Malá mezera od úplného vršku, aby to nebylo nalepené */
+            margin: 0; 
+        }
         .card { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
         img { 
 			width: 100%; 
 			height: 300px; /* Můžete zvětšit na 350px nebo 400px podle potřeby */
 			border-radius: 15px; 
 			object-fit: contain; /* TATO ZMĚNA zajistí, že bude vidět celý obrázek */
-			margin-bottom: 1rem; 
+			margin-bottom: 0; 
 			background: #fdfdfd; /* Jemné pozadí, kdyby byl obrázek úzký */
 		}
         input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; outline: none; }
@@ -24,22 +35,31 @@
 		.card { 
 			display: flex; 
 			flex-direction: column; 
-			gap: 10px; /* Vytvoří stejné mezery mezi prvky */
+			gap: 4px; /* Vytvoří stejné mezery mezi prvky */
 		}
 		#msg { 
 			margin: 0; 
-			padding: 10px 0;
+			padding: 0;
+            line-height: 0.5;
 			order: 1; /* Zpráva bude úplně nahoře */
 		}
 		#info { 
+            margin: 0px 0 5px 0;
 			order: 2; /* Info o pokusech bude pod zprávou */
 		}
 		#pic { 
 			order: 3; /* Obrázek pod info texty */
+            margin: -5px 0 -5px 0;
 		}
 		#input-area {
-			order: 4; /* Vstupní pole a tlačítko úplně dole */
+			order: 5; /* Vstupní pole a tlačítko úplně dole */
 		}
+        #video-box { 
+            order: 4; /* Tlačítko na video bude hned pod obrázkem */
+            display: flex;
+            justify-content: center;
+    
+        }
         .back-link {
             display: block; /* Zajistí, že odkaz zabere celou šířku a umožní zarovnání */
             text-align: left; /* Tlačí text odkazu doleva */
@@ -57,10 +77,11 @@
 <body>
 
 <div class="card">
-    <a href="https://fierce-dog.github.io/poznavacky_linktree/" class="back-link">⬅ Zpět na rozcestí</a>
+    <a href="https:/" class="back-link">⬅ Zpět na rozcestí</a>
     <p id="msg">Máš 3 pokusy</p>
     <p id="info"></p>
     <img id="pic" src="" alt="Načítám...">
+    <div id="video-box" style="margin-top: 1px; margin-bottom: 10px;"></div>
     <div id="input-area">
         <input type="text" id="guess-name" placeholder="Druh česky (např. pes domácí)" autocomplete="off"
             onkeypress="if(event.key === 'Enter') check()">
@@ -74,53 +95,53 @@
 <script>
     // --- VAŠE DATA ---
     const items = [
-        { file: "Predobratlovci/zaludovec_maly.jpg", name: "Žaludovec malý", order: "Hemichordata" },
-        { file: "Predobratlovci/lilijice_stredomorska.jpg", name: "Lilijice středomořská", order: "Echinodermata" },
-        { file: "Predobratlovci/hvezdice_tvrda.jpg", name: "Hvězdice tvrdá", order: "Echinodermata" },
-        { file: "Predobratlovci/jezovka_velka.jpg", name: "Ježovka velká", order: "Echinodermata" },
-        { file: "Predobratlovci/sumys_forsskaluv.jpg", name: "Sumýš Forsskalův", order: "Echinodermata" },
-        { file: "Kruhousti_paryby/mihule_potocni.jpg", name: "Mihule potoční", order: "Petromyzontiformes" },
-        { file: "Kruhousti_paryby/chimera_beloskvrnna.jpg", name: "Chiméra běloskvrnná", order: "Chimaeriformes" },
-        { file: "Kruhousti_paryby/ruznozubec_portjacksonsky.jpg", name: "Různozubec portjacksonský", order: "Heterodontiformes" },
-        { file: "Kruhousti_paryby/zralok_vouskaty.jpg", name: "Žralok vouskatý", order: "Orectolobiformes" },
-        { file: "Kruhousti_paryby/zralok_velrybi.jpg", name: "Žralok velrybí", order: "Orectolobiformes" },
-        { file: "Kruhousti_paryby/zralok_bily.jpg", name: "Žralok bílý", order: "Lamniformes" },
-        { file: "Kruhousti_paryby/liskoun_obecny.jpg", name: "Liškoun obecný", order: "Lamniformes" },
-        { file: "Kruhousti_paryby/zralok_sotek.jpg", name: "Žralok šotek", order: "Lamniformes" },
-        { file: "Kruhousti_paryby/macka_skvrnita.jpg", name: "Máčka skvrnitá", order: "Carcharhiniformes" },
-        { file: "Kruhousti_paryby/kladivoun_velky.jpg", name: "Kladivoun velký", order: "Carcharhiniformes" },
-        { file: "Kruhousti_paryby/piloun_obecny.jpg", name: "Piloun obecný", order: "Pristiformes" },
-        { file: "Kruhousti_paryby/pilohreb_obecny.jpg", name: "Pilohřeb obecný", order: "Pristiformes" },
-        { file: "Kruhousti_paryby/pilonos_vouskaty.jpg", name: "Pilonos vouskatý", order: "Pristiophoriformes" },
-        { file: "Kruhousti_paryby/rejnok_ostnaty.jpg", name: "Rejnok ostnatý", order: "Rajiformes" },
-        { file: "Kruhousti_paryby/trnucha_obecna.jpg", name: "Trnucha obecná", order: "Myliobatiformes" },
-        { file: "Kruhousti_paryby/manta_atlantska.jpg", name: "Manta atlantská", order: "Myliobatiformes" },
-        { file: "Ryby/uhor_ricni.jpg", name: "Úhoř řícní", order: "Anguilliformes" },
-        { file: "Ryby/murena_obecna.jpg", name: "Muréna obecná", order: "Anguilliformes" },
-        { file: "Ryby/sardel_peruanska.jpg", name: "Sardel peruánská", order: "Clupeiformes" },
-        { file: "Ryby/latimerie_podivna.jpg", name: "Latimérie podivná", order: "Coelacanthiformes" },
-        { file: "Ryby/kapr_obecny.jpg", name: "Kapr obecný", order: "Cypriniformes" },
-        { file: "Ryby/plotice_obecna.jpg", name: "Plotice obecná", order: "Cypriniformes" },
-        { file: "Ryby/piskor_pruhovany.jpg", name: "Piskoř pruhovaný", order: "Cypriniformes" },
-        { file: "Ryby/pirana_obecna.jpg", name: "Piraňa obecná", order: "Characiformes" },
-        { file: "Ryby/tetra_neonova.jpg", name: "Tetra neonová", order: "Characiformes" },
-        { file: "Ryby/sumec_velky.jpg", name: "Sumec velký", order: "Siluriformes" },
-        { file: "Ryby/sumecek_americky.jpg", name: "Sumeček americký", order: "Siluriformes" },
-        { file: "Ryby/stika_obecna.jpg", name: "Štika obecná", order: "Esociformes" },
-        { file: "Ryby/pstruh_obecny.jpg", name: "Pstruh obecný", order: "Salmoniformes" },
-        { file: "Ryby/lipan_podhorni.jpg", name: "Lipan podhorní", order: "Salmoniformes" },
-        { file: "Ryby/mnik_jednovousy.jpg", name: "Mník jednovousý", order: "Gadiformes" },
-        { file: "Ryby/zivorodka_duhova.jpg", name: "Živorodka duhová", order: "Cypridontiformes" },
-        { file: "Ryby/konicek_teckovany.jpg", name: "Koníček tečkovaný", order: "Gasterosteiformes" },
-        { file: "Ryby/okoun_ricni.jpg", name: "Okoun říční", order: "Perciformes" },
-        { file: "Ryby/candat_obecny.jpg", name: "Candát obecný", order: "Perciformes" },
-        { file: "Ryby/tunak_obecny.jpg", name: "Tuňák obecný", order: "Perciformes" },
-        { file: "Ryby/jezik_obecny.jpg", name: "Ježík obecný", order: "Tetraodontiformes" },
-        { file: "Ryby/platys_velky.jpg", name: "Platýs velký", order: "Pleuronectiformes" },
-        { file: "Ryby/arapaima_velka.jpg", name: "Arapaima velká", order: "Osteoglossiformes" },
-        { file: "Ryby/mesicnik_svitivy.jpg", name: "Měsíčník svítivý", order: "Tetraodontiformes" },
-        { file: "Ryby/veslonos_americky.jpg", name: "Veslonos americký", order: "Acipenseriformes" },
-        { file: "Ryby/jeseter_maly.jpg", name: "Jeseter malý", order: "Acipenseriformes" }
+        { file: "Predobratlovci/zaludovec_maly.jpg", name: "Žaludovec malý", order: "Hemichordata", link:"https://www.youtube.com/watch?v=eJiujgq2WgA&ab_channel=asturnatura-NaturalezayTurismo" },
+        { file: "Predobratlovci/lilijice_stredomorska.jpg", name: "Lilijice středomořská", order: "Echinodermata", link: "https://www.youtube.com/watch?v=mlgGQNBZwOk&ab_channel=PascalGirard" },
+        { file: "Predobratlovci/hvezdice_tvrda.jpg", name: "Hvězdice tvrdá", order: "Echinodermata", link:"https://www.youtube.com/watch?v=3h8SdYBJB_g&ab_channel=AntonioColacino" },
+        { file: "Predobratlovci/jezovka_velka.jpg", name: "Ježovka velká", order: "Echinodermata", link:"https://www.youtube.com/watch?v=HdOykiJTOYk&ab_channel=OcellatedEelpout" },
+        { file: "Predobratlovci/sumys_forsskaluv.jpg", name: "Sumýš Forsskalův", order: "Echinodermata", link:"https://www.youtube.com/watch?v=1rMlvnDnzAU&ab_channel=Andr%C3%A9N%C3%B3brega" },
+        { file: "Kruhousti_paryby/mihule_potocni.jpg", name: "Mihule potoční", order: "Petromyzontiformes", link:"https://www.youtube.com/watch?v=KzQWh04dKpE&ab_channel=NantaiTVPawe%C5%82Vogelsinger" },
+        { file: "Kruhousti_paryby/chimera_beloskvrnna.jpg", name: "Chiméra běloskvrnná", order: "Chimaeriformes", link:"https://www.youtube.com/watch?v=CJXqeeN9Np8" },
+        { file: "Kruhousti_paryby/ruznozubec_portjacksonsky.jpg", name: "Různozubec portjacksonský", order: "Heterodontiformes", link:"https://www.youtube.com/watch?v=2t0zCoRQBrY" },
+        { file: "Kruhousti_paryby/zralok_vouskaty.jpg", name: "Žralok vouskatý", order: "Orectolobiformes", link:"https://www.youtube.com/watch?v=nr6q8O3lAJ4" },
+        { file: "Kruhousti_paryby/zralok_velrybi.jpg", name: "Žralok velrybí", order: "Orectolobiformes", link:"https://www.youtube.com/watch?v=X7XSgHWaNyU&ab_channel=WTCProductions" },
+        { file: "Kruhousti_paryby/zralok_bily.jpg", name: "Žralok bílý", order: "Lamniformes", link:"https://www.youtube.com/watch?v=Z68K2eXhs_c&ab_channel=Strangefish" },
+        { file: "Kruhousti_paryby/liskoun_obecny.jpg", name: "Liškoun obecný", order: "Lamniformes", link:"https://www.youtube.com/watch?v=g7w7n-23IuI" },
+        { file: "Kruhousti_paryby/zralok_sotek.jpg", name: "Žralok šotek", order: "Lamniformes", link:"https://www.youtube.com/watch?v=fYpn2u2Wag4" },
+        { file: "Kruhousti_paryby/macka_skvrnita.jpg", name: "Máčka skvrnitá", order: "Carcharhiniformes", link:"https://www.youtube.com/watch?v=RDntuTdgWfI&ab_channel=NatureScot" },
+        { file: "Kruhousti_paryby/kladivoun_velky.jpg", name: "Kladivoun velký", order: "Carcharhiniformes", link:"https://www.youtube.com/watch?v=hLdwxNd7UMg&ab_channel=SimonSpear" },
+        { file: "Kruhousti_paryby/piloun_obecny.jpg", name: "Piloun obecný", order: "Pristiformes", link:"https://www.youtube.com/watch?v=utRVjTjQjjY&ab_channel=SharksAndRaysAustralia" },
+        { file: "Kruhousti_paryby/pilohreb_obecny.jpg", name: "Pilohřeb obecný", order: "Pristiformes", link:"https://www.youtube.com/watch?v=6zwRRffc8iw" },
+        { file: "Kruhousti_paryby/pilonos_vouskaty.jpg", name: "Pilonos vouskatý", order: "Pristiophoriformes", link:"https://vimeo.com/112883190" },
+        { file: "Kruhousti_paryby/rejnok_ostnaty.jpg", name: "Rejnok ostnatý", order: "Rajiformes", link:"https://www.youtube.com/watch?v=7xikSgG3eBU&ab_channel=TheoVickers%7CMarineWildlifePhotography" },
+        { file: "Kruhousti_paryby/trnucha_obecna.jpg", name: "Trnucha obecná", order: "Myliobatiformes", link:"https://www.youtube.com/watch?v=jqc2Q_ErmJg&ab_channel=shaharchaikin" },
+        { file: "Kruhousti_paryby/manta_atlantska.jpg", name: "Manta atlantská", order: "Myliobatiformes", link:"https://www.youtube.com/watch?v=BhYawW5pfwg&ab_channel=BuceoIb%C3%A9rico" },
+        { file: "Ryby/uhor_ricni.jpg", name: "Úhoř řícní", order: "Anguilliformes", link:"https://www.youtube.com/watch?v=lLT3PuB1KHk&ab_channel=JanKepi%C4%8D" },
+        { file: "Ryby/murena_obecna.jpg", name: "Muréna obecná", order: "Anguilliformes", link:"https://www.youtube.com/watch?v=H3PzM2byolw&ab_channel=SpanishDiver" },
+        { file: "Ryby/sardel_peruanska.jpg", name: "Sardel peruánská", order: "Clupeiformes", link:"https://www.youtube.com/watch?v=nAfU2nYOhGM"  },
+        { file: "Ryby/latimerie_podivna.jpg", name: "Latimérie podivná", order: "Coelacanthiformes", link:"https://www.youtube.com/watch?v=QHcICRwyTg0"  },
+        { file: "Ryby/kapr_obecny.jpg", name: "Kapr obecný", order: "Cypriniformes", link:"https://www.youtube.com/watch?v=61NWsf9mCPE&ab_channel=planetfishing"  },
+        { file: "Ryby/plotice_obecna.jpg", name: "Plotice obecná", order: "Cypriniformes", link:"https://www.youtube.com/watch?v=W0ICMHItnv4&ab_channel=fishbaseyt"  },
+        { file: "Ryby/piskor_pruhovany.jpg", name: "Piskoř pruhovaný", order: "Cypriniformes", link:"https://www.youtube.com/watch?v=VFkqXU_9pjY"  },
+        { file: "Ryby/pirana_obecna.jpg", name: "Piraňa obecná", order: "Characiformes", link:"https://www.youtube.com/watch?v=OZDdVodsNUE&ab_channel=Sierra442" },
+        { file: "Ryby/tetra_neonova.jpg", name: "Tetra neonová", order: "Characiformes", link:"https://www.youtube.com/watch?v=Ik0oIvlh9UM&ab_channel=ZOOBOXde"  },
+        { file: "Ryby/sumec_velky.jpg", name: "Sumec velký", order: "Siluriformes", link:"https://www.youtube.com/watch?v=qrW5g7wVEl8&ab_channel=JanKepi%C4%8D" },
+        { file: "Ryby/sumecek_americky.jpg", name: "Sumeček americký", order: "Siluriformes", link:"https://www.youtube.com/watch?v=CNcQVz9xch8&ab_channel=scubadubadog" },
+        { file: "Ryby/stika_obecna.jpg", name: "Štika obecná", order: "Esociformes", link:"https://www.youtube.com/watch?v=jPV_3zHRPIM&ab_channel=scubamedia.de" },
+        { file: "Ryby/pstruh_obecny.jpg", name: "Pstruh obecný", order: "Salmoniformes", link:"https://www.youtube.com/watch?v=y561cF59FUY&ab_channel=CzechUnderwater" },
+        { file: "Ryby/lipan_podhorni.jpg", name: "Lipan podhorní", order: "Salmoniformes", link:"https://www.youtube.com/watch?v=OOKbpasJeJE&ab_channel=CzechNymph" },
+        { file: "Ryby/mnik_jednovousy.jpg", name: "Mník jednovousý", order: "Gadiformes", link:"https://www.youtube.com/watch?v=NqM0O1Y9gag&ab_channel=tauchab1" },
+        { file: "Ryby/zivorodka_duhova.jpg", name: "Živorodka duhová", order: "Cypridontiformes", link:"https://www.youtube.com/watch?v=6WgmDXxomU8&ab_channel=RadekUrban" },
+        { file: "Ryby/konicek_teckovany.jpg", name: "Koníček tečkovaný", order: "Gasterosteiformes", link:"https://www.youtube.com/watch?v=Q0dj_eI7tXs&ab_channel=MonSubmari" },
+        { file: "Ryby/okoun_ricni.jpg", name: "Okoun říční", order: "Perciformes", link:"https://www.youtube.com/watch?v=b9-H5IWIMWI&ab_channel=%C5%81ukaszKarnatowski" },
+        { file: "Ryby/candat_obecny.jpg", name: "Candát obecný", order: "Perciformes", link:"https://www.youtube.com/watch?v=k8D0_YdkixE&ab_channel=TauchrevierDeutschland" },
+        { file: "Ryby/tunak_obecny.jpg", name: "Tuňák obecný", order: "Perciformes", link:"https://www.youtube.com/watch?v=PsIS_0NfMXs&ab_channel=XavierGran%C3%A9Feliu" },
+        { file: "Ryby/jezik_obecny.jpg", name: "Ježík obecný", order: "Tetraodontiformes", link:"https://www.youtube.com/watch?v=RR10WgH8Dcc&ab_channel=BeyondScuba" },
+        { file: "Ryby/platys_velky.jpg", name: "Platýs velký", order: "Pleuronectiformes", link:"https://www.youtube.com/watch?v=3MhZyeXt9Z0&ab_channel=haraldhjellum" },
+        { file: "Ryby/arapaima_velka.jpg", name: "Arapaima velká", order: "Osteoglossiformes", link:"https://www.youtube.com/watch?v=nHDBFzgEZN4&ab_channel=TahuayoLodgeExpeditions%E2%84%A2" },
+        { file: "Ryby/mesicnik_svitivy.jpg", name: "Měsíčník svítivý", order: "Tetraodontiformes", link:"https://www.youtube.com/watch?v=Ra1UmKLzaWU&ab_channel=WIRED" },
+        { file: "Ryby/veslonos_americky.jpg", name: "Veslonos americký", order: "Acipenseriformes", link:"https://www.youtube.com/watch?v=wIrA8jT8G2Y" },
+        { file: "Ryby/jeseter_maly.jpg", name: "Jeseter malý", order: "Acipenseriformes", link:"https://www.youtube.com/watch?v=yfd7uqlSuLw&ab_channel=%C5%81ukaszKarnatowski" }
     ];
 
     let current;
@@ -133,6 +154,7 @@
         const picField = document.getElementById("pic");
         const inName = document.getElementById("guess-name");
         const inOrder = document.getElementById("guess-order");
+        const videoBox = document.getElementById("video-box");
 
         // 1. KONTROLA POOLU (Tohle ti chybělo)
         if (pool.length === 0) {
@@ -143,6 +165,30 @@
         const idx = Math.floor(Math.random() * pool.length);
         current = pool[idx];
         picField.src = current.file;
+
+        // --- 3. LOGIKA PRO VIDEO TLAČÍTKO ---
+        videoBox.innerHTML = ""; // Vyčistit minulé kolo
+        if (current.link && current.link !== "") {
+            const videoBtn = document.createElement("a");
+            videoBtn.href = current.link;
+            videoBtn.target = "_blank";
+            videoBtn.innerHTML = "📺 Video";
+        
+        // Styl tlačítka
+            videoBtn.style.display = "inline-block";
+            videoBtn.style.padding = "5px 10px";
+            videoBtn.style.backgroundColor = "#1565c0";
+            videoBtn.style.color = "white";
+            videoBtn.style.borderRadius = "10px";
+            videoBtn.style.textDecoration = "none";
+            videoBtn.style.fontSize = "13px";
+            videoBtn.style.fontWeight = "bold";
+            videoBtn.style.marginTop = "5px";
+            videoBtn.style.marginBottom = "2px";
+            videoBtn.style.boxShadow = "0 3px 8px rgba(21, 101, 192, 0.3)";
+
+        videoBox.appendChild(videoBtn);
+        }
 
         // 3. RESET STAVU
         phase = 1; 
